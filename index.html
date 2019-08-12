@@ -15,8 +15,8 @@ body { margin:0; padding:0; }
 
   <style>
   .mapboxgl-popup {
-  max-width: 400px;
-  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  max-width: 600px;
+  font: 18px/24px 'Roboto', Arial, Helvetica, sans-serif;
   }
   </style>
 
@@ -25,8 +25,8 @@ body { margin:0; padding:0; }
 mapboxgl.accessToken = 'pk.eyJ1IjoiamtldmluY3Jvd2xleSIsImEiOiJjamNxbGk4eXkwMXp1MndwN2Q4bGRrZzVmIn0.M7zeah_wNFvSkLFsksWlWw';
 
 var bounds = [
-[-122.716, 48.567], // Southwest coordinates
-[-121.867, 48.879]  // Northeast coordinates
+[-122.550918,48.725700], // Southwest coordinates
+[-122.404135,48.800721]  // Northeast coordinates
 ];
 
 var map = new mapboxgl.Map({
@@ -67,7 +67,7 @@ map.addLayer({
 					"type": "Point",
 					"coordinates": [-122.493123, 48.754291]
 				}
-			}, {
+			},{
 				"type": "Feature",
 				"properties": {
 					"description": "<strong>Tour of All American Marine</strong><p>Test 3 Text.</p>",
@@ -77,18 +77,43 @@ map.addLayer({
 					"type": "Point",
 					"coordinates": [-122.491001, 48.754680]
 				}
-			}]
+			},
+      {
+       "type": "Feature",
+       "properties": {
+         "description": "<strong>Taste the Sea Presented by Haggen Northwest Fresh</strong><p>Test 4 Text.</p>",
+         "icon": "movie-tickets-25px"
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [-122.500156, 48.754969],
+       }
+     }]
 		}
 	},
 	"layout": {
 		"icon-image": "{icon}",
+    "icon-size": 1.25,
 		"icon-allow-overlap": false
 	}
 });
 
-// When a click event occurs on a feature in the places layer, open a popup at the
+// Create a popup, but don't add it to the map yet.
+var popup = new mapboxgl.Popup({
+closeButton: false,
+closeOnClick: false
+});
+
+map.on('mouseenter', 'places', function(e) {
+// Change the cursor style as a UI indicator.
+  map.getCanvas().style.cursor = 'pointer';
+
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var description = e.features[0].properties.description;
+
+// When a hover event occurs on a feature in the places layer, open a popup at the
 // location of the feature, with description HTML from its properties.
-map.on('click', 'places', function (e) {
+map.on('mouseenter', 'places', function (e) {
   var coordinates = e.features[0].geometry.coordinates.slice();
   var description = e.features[0].properties.description;
 
@@ -99,20 +124,15 @@ map.on('click', 'places', function (e) {
    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
   }
 
-  new mapboxgl.Popup()
-    .setLngLat(coordinates)
+  popup.setLngLat(coordinates)
     .setHTML(description)
     .addTo(map);
-});
+  });
 
-// Change the cursor to a pointer when the mouse is over the places layer.
-map.on('mouseenter', 'places', function () {
-  map.getCanvas().style.cursor = 'pointer';
-});
-
-// Change it back to a pointer when it leaves.
-map.on('mouseleave', 'places', function () {
-  map.getCanvas().style.cursor = '';
+  map.on('mouseleave', 'places', function() {
+    map.getCanvas().style.cursor = '';
+    popup.remove();
+  });
 });
 });
 </script>
