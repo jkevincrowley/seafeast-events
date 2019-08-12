@@ -1,0 +1,45 @@
+{
+  "type": "FeatureCollection",
+  "features": [{
+    "type": "Feature",
+    "properties": {
+      "description": "<strong>San Juan Cruises Harbor Boat Ride + Tour of Bellingham Cold Storage</strong><p> Test text 1</p>",
+      "icon": "movie-tickets-25px"
+    },
+    "geometry": {
+      "type": "Point",
+      "coordinates": [-122.49901, 48.753625]
+    }
+  },{
+    "type": "Feature",
+    "properties": {
+      "description": "<strong>Tour of Bornstein Foods</strong><p>Test 2 Text</p>",
+      "icon": "movie-tickets-25px"
+    },
+    "geometry": {
+      "type": "Point",
+      "coordinates": [-122.493123, 48.754291]
+    }
+  },{
+    "type": "Feature",
+    "properties": {
+      "description": "<strong>Tour of All American Marine</strong><p>Test 3 Text.</p>",
+      "icon": "movie-tickets-25px"
+    },
+    "geometry": {
+      "type": "Point",
+      "coordinates": [-122.491001, 48.754680]
+    }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+     "description": "<strong>Taste the Sea Presented by Haggen Northwest Fresh</strong><p>Test 4 Text.</p>",
+     "icon": "movie-tickets-25px"
+   },
+   "geometry": {
+     "type": "Point",
+     "coordinates": [-122.500156, 48.754969]
+   }
+ }]
+}
