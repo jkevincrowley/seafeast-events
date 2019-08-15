@@ -34,7 +34,7 @@
   {
    "type": "Feature",
    "properties": {
-     "description": "<strong>Taste the Sea Presented by Haggen Northwest Fresh</strong><p>Test 4 Text.</p>",
+     "description": "<strong>Taste the Sea Presented by Haggen Northwest Fresh</strong><p>Hour long tasting of Pacific Northwest seafood<br><br>Sat 9/21 11:30am, 1pm, 3:30pm, 5pm<br><br><a href=\"https://goo.gl/maps/1k6MwDqjFbBhs5WY7\">Squalicum Boathouse, 2600 N Harbor Loop Dr.</a></p>",
      "icon": "movie-tickets-25px"
    },
    "geometry": {
