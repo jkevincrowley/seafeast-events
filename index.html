@@ -1,96 +1,107 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset='utf-8' />
-<title>Display a map</title>
-<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js'></script>
-<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css' rel='stylesheet' />
-<style>
-body { margin:0; padding:0; }
-#map { position:absolute; top:0; bottom:0; width:100%; }
-</style>
+  <meta charset='utf-8' />
+  <title>Bellingham Seafeast 2019</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css' rel='stylesheet' />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
 </head>
+
 <body>
 
   <style>
-  .mapboxgl-popup {
-  max-width: 600px;
-  font: 18px/24px 'Roboto', Arial, Helvetica, sans-serif;
-  }
+    .mapboxgl-popup {
+      max-width: 800px;
+      font: 18px/24px 'Roboto', Arial, Helvetica, sans-serif;
+    }
   </style>
 
-<div id='map'></div>
-<script>
-mapboxgl.accessToken = 'pk.eyJ1IjoiamtldmluY3Jvd2xleSIsImEiOiJjamNxbGk4eXkwMXp1MndwN2Q4bGRrZzVmIn0.M7zeah_wNFvSkLFsksWlWw';
+  <div id='map'></div>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYmhhbXNlYWZlYXN0IiwiYSI6ImNqemM5M2N2ZTAxa3EzbnFqNXQwNmR0dzIifQ.vXdpUuuNct88ZTZ1UH0K9Q';
+    var bounds = [
+      [-122.550918, 48.725700], // Southwest coordinates
+      [-122.404135, 48.800721] // Northeast coordinates
+    ];
+    var map = new mapboxgl.Map({
+      container: 'map', // container id
+      style: 'mapbox://styles/bhamseafeast/ck05mec481kja1crrwc0ko8iq', // note: ck05mec481kja1crrwc0ko8iq references the 'seafeast event map - dev' style. needs to be changed to production map when edits done.
+      center: [-122.489, 48.754], // starting position [lng, lat]
+      zoom: 14.24, // starting zoom
+      maxBounds: bounds, // Sets bounds as max
+      hash: true,
+      fresh: true
+    });
+    map.on('load', function() {
+      let tilesetId = 'mapbox://bhamseafeast.cjzei6yrf0jxb2np6mswmtrtm-2jv96';
 
-var bounds = [
-[-122.550918,48.725700], // Southwest coordinates
-[-122.404135,48.800721]  // Northeast coordinates
-];
+      //Add a layer showing the places.
+      map.addLayer({
+        "id": "features",
+        "type": "symbol",
+        "source": {
+          type: 'vector',
+          url: tilesetId
+        }, //this is the tileset name from studio
+        "source-layer": "Seafeast_features",
+        "layout": {
+          "icon-image": "{icon}",
+          "icon-size": 1.25,
+          "icon-allow-overlap": false
+        }
+      });
+    });
 
-var map = new mapboxgl.Map({
-container: 'map', // container id
-style: 'mapbox://styles/jkevincrowley/cjxupt0h99aam1clrhnza39yd', // stylesheet location
-center: [-122.489, 48.754], // starting position [lng, lat]
-zoom: 14.24, // starting zoom
-maxBounds: bounds // Sets bounds as max
-});
+    // Create a popup, but don't add it to the map yet.
+    var popup = new mapboxgl.Popup({
+      closeButton: true,
+      closeOnClick: true
+    });
 
+    map.on('mouseenter', 'features', function(e) {
+      // Change the cursor style as a UI indicator.
+      map.getCanvas().style.cursor = 'pointer';
+      var coordinates = e.features[0].geometry.coordinates.slice();
+      var description = e.features[0].properties.description;
+      // When a click event occurs on a feature in the places layer, open a popup at the
+      // location of the feature, with description HTML from its properties.
+      map.on('click', 'features', function(e) {
+        var coordinates = e.features[0].geometry.coordinates.slice();
+        var description = e.features[0].properties.description;
+         // Ensure that if the map is zoomed out such that multiple
+         // copies of the feature are visible, the popup appears
+         // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+        popup.setLngLat(coordinates)
+          .setHTML(description)
+          .addTo(map);
+      });
 
-map.on('load', function () {
-// Add data source from local file
-map.addSource('places', { 'type': 'geojson', 'data': './places.geojson' })
-// Add a layer showing the places.
-map.addLayer({
-  "id": "places",
-	"type": "symbol",
-	"source": "places",
-  "layout": {
-		"icon-image": "{icon}",
-    "icon-size": 1.25,
-		"icon-allow-overlap": false
-	}
-});
-
-// Create a popup, but don't add it to the map yet.
-var popup = new mapboxgl.Popup({
-closeButton: false,
-closeOnClick: false
-});
-
-map.on('mouseenter', 'places', function(e) {
-// Change the cursor style as a UI indicator.
-  map.getCanvas().style.cursor = 'pointer';
-
-  var coordinates = e.features[0].geometry.coordinates.slice();
-  var description = e.features[0].properties.description;
-
-// When a hover event occurs on a feature in the places layer, open a popup at the
-// location of the feature, with description HTML from its properties.
-map.on('mouseenter', 'places', function (e) {
-  var coordinates = e.features[0].geometry.coordinates.slice();
-  var description = e.features[0].properties.description;
-
-  // Ensure that if the map is zoomed out such that multiple
-  // copies of the feature are visible, the popup appears
-  // over the copy being pointed to.
-  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-   coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-  }
-
-  popup.setLngLat(coordinates)
-    .setHTML(description)
-    .addTo(map);
-  });
-
-  map.on('mouseleave', 'places', function() {
-    map.getCanvas().style.cursor = '';
-    popup.remove();
-  });
-});
-});
-</script>
+      map.on('mouseleave', 'features', function() {
+        map.getCanvas().style.cursor = '';
+        // popup.remove();
+      });
+    });
+  </script>
 
 </body>
+
 </html>
+
