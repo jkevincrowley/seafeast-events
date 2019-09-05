@@ -26,8 +26,14 @@
 
   <style>
     .mapboxgl-popup {
-      max-width: 800px;
       font: 18px/24px 'Roboto', Arial, Helvetica, sans-serif;
+      scrollbars = 1;
+    }
+
+    .mapboxgl-popup-content {
+      width: 600px;
+      max-height: 300px;
+      overflow-y: scroll;
     }
   </style>
 
@@ -40,17 +46,20 @@
     ];
     var map = new mapboxgl.Map({
       container: 'map', // container id
-      style: 'mapbox://styles/bhamseafeast/ck05mec481kja1crrwc0ko8iq', // note: ck05mec481kja1crrwc0ko8iq references the 'seafeast event map - dev' style. needs to be changed to production map when edits done.
+      style: 'mapbox://styles/bhamseafeast/ck05mec481kja1crrwc0ko8iq', // stylesheet location
       center: [-122.489, 48.754], // starting position [lng, lat]
       zoom: 14.24, // starting zoom
       maxBounds: bounds, // Sets bounds as max
       hash: true,
       fresh: true
     });
+
+    var clickedCoordinates = [0, 0];
+
     map.on('load', function() {
       let tilesetId = 'mapbox://bhamseafeast.cjzei6yrf0jxb2np6mswmtrtm-2jv96';
 
-      //Add a layer showing the places.
+      //Add a layer showing the features.
       map.addLayer({
         "id": "features",
         "type": "symbol",
@@ -74,18 +83,23 @@
     });
 
     map.on('mouseenter', 'features', function(e) {
-      // Change the cursor style as a UI indicator.
-      map.getCanvas().style.cursor = 'pointer';
+    // Change the cursor style as a UI indicator.
+    map.getCanvas().style.cursor = 'pointer';
+    if (e.features[0].properties &&
+      e.features[0].properties.category &&
+      e.features[0].properties.category === 'ticketed event') {
       var coordinates = e.features[0].geometry.coordinates.slice();
       var description = e.features[0].properties.description;
       // When a click event occurs on a feature in the places layer, open a popup at the
       // location of the feature, with description HTML from its properties.
       map.on('click', 'features', function(e) {
+        clickedCoordinates = e.features[0].geometry.coordinates
+        map.easeTo({ center: clickedCoordinates });
         var coordinates = e.features[0].geometry.coordinates.slice();
         var description = e.features[0].properties.description;
-         // Ensure that if the map is zoomed out such that multiple
-         // copies of the feature are visible, the popup appears
-         // over the copy being pointed to.
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
@@ -96,12 +110,13 @@
 
       map.on('mouseleave', 'features', function() {
         map.getCanvas().style.cursor = '';
-        // popup.remove();
       });
+    } else {
+      map.getCanvas().style.cursor = '';
+    }
     });
   </script>
 
 </body>
 
 </html>
-
