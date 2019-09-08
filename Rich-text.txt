@@ -1,0 +1,36 @@
+Ticketed Events:
+
+San Juan Cruises Harbor Tour:
+
+<h3 class="ProductItem-details-title" data-content-field="title">San Juan Cruises Harbor Ride + Bellingham Cold Storage Tour</h3>
+<div class="ProductItem-details-excerpt" data-content-field="excerpt"><a href="https://bellinghamseafeast.org/tickets/san-juan-cruise-harbor-ride-bellingham-cold-storage-tour">Buy Tickets Here</a>
+<p class=""><strong>Adult $15<br />Child $5<br /></strong><br /><em>Please note the final price will reflect a small service fee from our credit card vendor. All proceeds from this tour go back to support Bellingham SeaFeast.</em></p>
+<p class="">Zuanich Point Park (boat departs at dock off Zuanich Point Park)<em>.</em></p>
+<p class="">Did you know the largest portside cold storage on the West Coast is right here in Bellingham?</p>
+<p class="">Bellingham Cold Storage has been storing and handling the harvest of the sea and land for 73 years. Hop on a boat with San Juan Cruises and head across the bay to take a look behind the scenes of how BCS serves a worldwide customer base right here on the shores of Bellingham Bay!</p>
+<p class=""><em>Total boat and facility tour time is approximately 2 hours. This tour requires climbing stairs, crossing ramps and walking. Children are welcome when accompanied by an adult but the tour cannot accommodate strollers.</em></p>
+</div>
+
+---
+
+Taste the Sea Presented by Haggen Northwest Fresh
+
+<p><strong>Taste the Sea Presented by Haggen Northwest Fresh</strong></p>
+<p><a href="https://bellinghamseafeast.org/tickets/taste-the-sea-presented-by-haggen">Buy Tickets here</a></p>
+<p>Hour long tasting of Pacific Northwest seafood<br /><br />Sat 9/21 11:30am, 1pm, 3:30pm, 5pm<br /><br /><a href="https://goo.gl/maps/1k6MwDqjFbBhs5WY7">Squalicum Boathouse, 2600 N Harbor Loop Dr.</a></p>
+
+---
+
+Tour of All American Marine
+
+<h3 class="ProductItem-details-title" data-content-field="title">Tour of All American Marine</h3>
+<div class="ProductItem-details-excerpt" data-content-field="excerpt">
+<p class=""><a href="https://bellinghamseafeast.org/tickets/all-american-marine-tour">Buy Tickets Here</a></p>
+<p class=""><strong>Adult $10<br />Child $5<br /></strong><em>Please note the final price will reflect a small service fee from our credit card vendor. All proceeds from this tour go back to support Bellingham SeaFeast.</em></p>
+<p class="">1010 Hilton Ave. <br />Bellingham, WA 98225</p>
+<p class="">Take a peek into the world of modern boat building with a tour of All American Marine. All American Marine is located on the shores of Bellingham Bay where vessels are built in a new state-of-the-art 57,000 sq. ft. production facility. All American Marine has attained exclusive North American building rights with one of the world&rsquo;s top naval architects and designers, Nic de Waal of Teknicraft Design, Ltd. in Auckland, New Zealand.</p>
+<p class=""><em>Tours run 30 - 45 minutes. Children must be accompanied by a parent/guardian at all times, no strollers please. Parking is available for tour attendees at All American Marine, 1010 Hilton Ave Bellingham, WA 98225. </em></p>
+</div>
+
+---
+
