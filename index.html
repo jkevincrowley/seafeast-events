@@ -38,7 +38,7 @@
 
   <div id='map'></div>
   <script>
-  
+
     mapboxgl.accessToken = 'pk.eyJ1IjoiYmhhbXNlYWZlYXN0IiwiYSI6ImNqemM5M2N2ZTAxa3EzbnFqNXQwNmR0dzIifQ.vXdpUuuNct88ZTZ1UH0K9Q';
     var bounds = [
         [-122.550918, 48.725700], // Southwest coordinates
@@ -53,19 +53,17 @@
         hash: true,
         fresh: true
     });
-
     var popup = new mapboxgl.Popup({
         closeButton: true,
         closeOnClick: true
     });
-
     map.on('load', function() {
         const interactive_layers = [
           'Logistics areas',
           'Ticketed Events Text',
           'fisherpoets venues'
         ];
-        
+
         interactive_layers.forEach( (layer) => {
             // Create a popup, but don't add it to the map yet.
             map.on('mouseenter', layer, function(e) {
@@ -80,15 +78,11 @@
                     highlight(e.features);
                 }
             });
-
             map.on('mouseleave', layer, function() {
                 map.getCanvas().style.cursor = '';
             });
-
         });
-
     });
-
     function isInteractive(features) {
       if (features &&
           features.length > 0 &&
@@ -100,7 +94,6 @@
       }
       return false;
     }
-
     function highlight(features) {
         const feat = features[0];
         const category = feat.properties.category;
@@ -110,7 +103,7 @@
         const geometry_type = feat.geometry.type;
         if (geometry_type == 'Polygon') {
           const centroid = turf.centroid(turf.polygon(clickedCoordinates));
-          center = centroid.geometry.coordinates;          
+          center = centroid.geometry.coordinates;
         } else if (geometry_type == 'Point') {
           center = clickedCoordinates;
         }
@@ -119,7 +112,6 @@
           .setHTML(feat.properties.description)
           .addTo(map);
     }
-
   </script>
 
 </body>
