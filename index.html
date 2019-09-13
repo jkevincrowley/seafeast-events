@@ -7,6 +7,7 @@
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@5/turf.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -37,76 +38,87 @@
 
   <div id='map'></div>
   <script>
+  
     mapboxgl.accessToken = 'pk.eyJ1IjoiYmhhbXNlYWZlYXN0IiwiYSI6ImNqemM5M2N2ZTAxa3EzbnFqNXQwNmR0dzIifQ.vXdpUuuNct88ZTZ1UH0K9Q';
     var bounds = [
-      [-122.550918, 48.725700], // Southwest coordinates
-      [-122.404135, 48.800721] // Northeast coordinates
+        [-122.550918, 48.725700], // Southwest coordinates
+        [-122.404135, 48.800721] // Northeast coordinates
     ];
     var map = new mapboxgl.Map({
-      container: 'map', // container id
-      style: 'mapbox://styles/bhamseafeast/ck05mec481kja1crrwc0ko8iq', // stylesheet location
-      center: [-122.489, 48.754], // starting position [lng, lat]
-      zoom: 14.24, // starting zoom
-      maxBounds: bounds, // Sets bounds as max
-      hash: true,
-      fresh: true
+        container: 'map', // container id
+        style: 'mapbox://styles/bhamseafeast/ck05mec481kja1crrwc0ko8iq', // stylesheet location
+        center: [-122.489, 48.754], // starting position [lng, lat]
+        zoom: 14.24, // starting zoom
+        maxBounds: bounds, // Sets bounds as max
+        hash: true,
+        fresh: true
     });
-    var clickedCoordinates = [0, 0];
-    map.on('load', function() {
-      let tilesetId = 'mapbox://bhamseafeast.cjzei6yrf0jxb2np6mswmtrtm-2jv96';
-      //Add a layer showing the features.
-      map.addLayer({
-        "id": "features",
-        "type": "symbol",
-        "source": {
-          type: 'vector',
-          url: tilesetId
-        }, //this is the tileset name from studio
-        "source-layer": "Seafeast_features",
-        "layout": {
-          "icon-image": "{icon}",
-          "icon-size": 1,
-          "icon-allow-overlap": false
-        }
-      });
-    });
-    // Create a popup, but don't add it to the map yet.
+
     var popup = new mapboxgl.Popup({
-      closeButton: true,
-      closeOnClick: true
+        closeButton: true,
+        closeOnClick: true
     });
-    map.on('mouseenter', 'features', function(e) {
-    // Change the cursor style as a UI indicator.
-    map.getCanvas().style.cursor = 'pointer';
-    if (e.features[0].properties &&
-      e.features[0].properties.category &&
-      e.features[0].properties.category === 'fisherpoets venue', 'ticketed event') {
-      var coordinates = e.features[0].geometry.coordinates.slice();
-      var description = e.features[0].properties.description;
-      // When a click event occurs on a feature in the places layer, open a popup at the
-      // location of the feature, with description HTML from its properties.
-      map.on('click', 'features', function(e) {
-        clickedCoordinates = e.features[0].geometry.coordinates
-        map.easeTo({ center: clickedCoordinates });
-        var coordinates = e.features[0].geometry.coordinates.slice();
-        var description = e.features[0].properties.description;
-        // Ensure that if the map is zoomed out such that multiple
-        // copies of the feature are visible, the popup appears
-        // over the copy being pointed to.
-        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-        }
-        popup.setLngLat(coordinates)
-          .setHTML(description)
-          .addTo(map);
-      });
-      map.on('mouseleave', 'features', function() {
-        map.getCanvas().style.cursor = '';
-      });
-    } else {
-      map.getCanvas().style.cursor = '';
+
+    map.on('load', function() {
+        const interactive_layers = [
+          'Logistics areas',
+          'Ticketed Events Text'
+        ];
+        
+        interactive_layers.forEach( (layer) => {
+            // Create a popup, but don't add it to the map yet.
+            map.on('mouseenter', layer, function(e) {
+                if (isInteractive(e.features)) {
+                    map.getCanvas().style.cursor = 'pointer';
+                }
+            });
+            // When a click event occurs on a feature in the places layer, open a popup at the
+            // location of the feature, with description HTML from its properties.
+            map.on('click', layer, function(e) {
+                if (isInteractive(e.features)) {
+                    highlight(e.features);
+                }
+            });
+
+            map.on('mouseleave', layer, function() {
+                map.getCanvas().style.cursor = '';
+            });
+
+        });
+
+    });
+
+    function isInteractive(features) {
+      if (features &&
+          features.length > 0 &&
+          features[0].properties.category &&
+          (features[0].properties.category === 'fisherpoets venue' ||
+          features[0].properties.category === 'ticketed event' ||
+          features[0].properties.category === 'fun')) {
+            return true;
+      }
+      return false;
     }
-    });
+
+    function highlight(features) {
+        const feat = features[0];
+        const category = feat.properties.category;
+        const description = feat.properties.description;
+        let center;
+        const clickedCoordinates = feat.geometry.coordinates;
+        const geometry_type = feat.geometry.type;
+        if (geometry_type == 'Polygon') {
+          const centroid = turf.centroid(turf.polygon(clickedCoordinates));
+          center = centroid.geometry.coordinates;          
+        } else if (geometry_type == 'Point') {
+          center = clickedCoordinates;
+        }
+        map.easeTo({ center: center });
+        popup.setLngLat(center)
+          .setHTML(feat.properties.description)
+          .addTo(map);
+    }
+
   </script>
 
 </body>
